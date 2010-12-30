@@ -60,7 +60,6 @@ class Klout
     def request(request_uri)
       url = URI.parse(request_uri)
       response = Net::HTTP.start(url.host, url.port) { |http|
-        ap url.request_uri
         http.get(url.request_uri)
       }
       
