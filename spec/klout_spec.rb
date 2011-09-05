@@ -10,10 +10,10 @@ describe "Klout" do
     Klout.api_key.should == ENV['API_KEY'] || ""
   end
   
-  context "score request" do
+  context "klout score request" do
     before do
       @score_request ||= lambda {
-        Klout.score('jasontorres')
+        Klout.klout_score('jasontorres')
       }
       
       @score_result ||= @score_request.call
@@ -31,10 +31,10 @@ describe "Klout" do
     end
   end
   
-  context "profile request" do
+  context "show user request" do
     before do
       @profile_request ||= lambda {
-        Klout.profile('jasontorres')
+        Klout.show_user('jasontorres')
       }
       @profile_result ||= @profile_request.call
     end
@@ -44,19 +44,40 @@ describe "Klout" do
     end
     
     it "should have the required keys" do
-      @profile_result['user'] = @profile_result["users"].first
-      @profile_result.has_key?('user').should == true
-      @profile_result['user'].has_key?('score').should == true
-      @profile_result['user']['score'].has_key?('slope').should == true
-      @profile_result['user']['score'].has_key?('kscore').should == true
-      @profile_result['user']['score'].has_key?('kclass').should == true
-      @profile_result['user']['score'].has_key?('true_reach').should == true
-      @profile_result['user']['score'].has_key?('amplification_score').should == true
-      @profile_result['user']['score'].has_key?('kscore_description').should == true
-      @profile_result['user']['score'].has_key?('network_score').should == true
-      @profile_result['user']['score'].has_key?('kclass_description').should == true
-      @profile_result['user'].has_key?('twitter_screen_name').should == true
-      @profile_result['user'].has_key?('twitter_id').should == true
+      @profile_result['users'] = @profile_result["users"].first
+      @profile_result.has_key?('users').should == true
+      @profile_result['users'].has_key?('twitter_id').should == true
+      @profile_result['users'].has_key?('twitter_screen_name').should == true
+
+      @profile_result['users'].has_key?('score').should == true
+      @profile_result['users']['score'].has_key?('slope').should == true
+      @profile_result['users']['score'].has_key?('kscore').should == true
+      @profile_result['users']['score'].has_key?('kclass').should == true
+      @profile_result['users']['score'].has_key?('true_reach').should == true
+      @profile_result['users']['score'].has_key?('amplification_score').should == true
+      @profile_result['users']['score'].has_key?('kscore_description').should == true
+      @profile_result['users']['score'].has_key?('network_score').should == true
+      @profile_result['users']['score'].has_key?('kclass_description').should == true
+    end
+    
+  end
+  
+  context "topics request" do
+    before do
+      @profile_request ||= lambda {
+        Klout.topics('jasontorres')
+      }
+      @profile_result ||= @profile_request.call
+    end
+    
+    it "should have a profile" do
+      @profile_result.should be_instance_of(Hash)
+    end
+    
+    it "should have the required keys" do
+      @profile_result['users'] = @profile_result["users"].first
+      @profile_result.has_key?('users').should == true
+      @profile_result['users'].has_key?('topics').should == true
     end
     
   end
@@ -103,8 +124,4 @@ describe "Klout" do
     
   end
   
-  
-  
-  
 end
-
