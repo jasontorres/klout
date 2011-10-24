@@ -25,8 +25,7 @@ class Klout
   BASE_URI = 'http://api.klout.com/1'
   
   class << self
-    @@base_host = "klout.com"
-    
+
     @@api_key = ""
 
     def api_key=(api)
@@ -75,5 +74,9 @@ class Klout
         raise error
       end
     end
+    
+    alias_method :score, :klout_score
+    alias_method :profile, :show_user
+    
   end
 end
