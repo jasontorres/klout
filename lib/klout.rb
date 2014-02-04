@@ -2,6 +2,7 @@ require 'uri'
 require 'net/http'
 require 'rubygems'
 require 'json'
+
 $:.unshift(File.dirname(__FILE__)) unless
   $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
 
@@ -21,9 +22,10 @@ Klout.score('jasontorres')
 
 class Klout
   VERSION = '0.1.1'
+  BASE_URI = 'http://api.klout.com/1'
+  
   class << self
-    @@base_host = "klout.com"
-    
+
     @@api_key = ""
 
     def api_key=(api)
@@ -34,23 +36,28 @@ class Klout
       @@api_key
     end
 
-    def score(usernames)
-      request_uri = "http://api.klout.com/1/klout.json?key=#{@@api_key}&users=#{usernames}"
+    def klout_score(usernames)
+      request_uri = "#{BASE_URI}/klout.json?users=#{usernames}&key=#{@@api_key}"
       return request(request_uri)
     end
     
-    def profile(usernames)
-      request_uri = "http://api.klout.com/1/users/show.json?key=#{@@api_key}&users=#{usernames}"
+    def show_user(usernames)
+      request_uri = "#{BASE_URI}/users/show.json?users=#{usernames}&key=#{@@api_key}"
+      return request(request_uri)
+    end
+    
+    def topics(usernames)
+      request_uri = "#{BASE_URI}/users/topics.json?users=#{usernames}&key=#{@@api_key}"
       return request(request_uri)
     end
     
     def influenced_by(usernames)
-      request_uri = "http://api.klout.com/1/soi/influenced_by.json?key=#{@@api_key}&users=#{usernames}"
+      request_uri = "#{BASE_URI}/soi/influenced_by.json?users=#{usernames}&key=#{@@api_key}"
       return request(request_uri)
     end
     
     def influencer_of(usernames)
-      request_uri = "http://api.klout.com/1/soi/influencer_of.json?key=#{@@api_key}&users=#{usernames}"
+      request_uri = "#{BASE_URI}/soi/influencer_of.json?users=#{usernames}&key=#{@@api_key}"
       return request(request_uri)
     end
     
@@ -67,5 +74,9 @@ class Klout
         raise error
       end
     end
+    
+    alias_method :score, :klout_score
+    alias_method :profile, :show_user
+    
   end
 end
